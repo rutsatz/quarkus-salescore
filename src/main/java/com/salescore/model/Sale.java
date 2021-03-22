@@ -1,6 +1,7 @@
 package com.salescore.model;
 
 import com.salescore.dto.SaleCreationDTO;
+import com.salescore.dto.SaleResponseDTO;
 import io.quarkus.mongodb.panache.reactive.ReactivePanacheMongoEntity;
 import org.bson.types.ObjectId;
 
@@ -33,5 +34,14 @@ public class Sale extends ReactivePanacheMongoEntity {
         this.seller = seller;
         this.products = products;
         return this;
+    }
+
+    public SaleResponseDTO toDto(Sale sale) {
+        var dto = new SaleResponseDTO();
+        dto.id = sale.id != null ? sale.id.toString() : null;
+        dto.seller = sale.seller;
+        dto.amount = sale.amount;
+        dto.products = sale.products;
+        return dto;
     }
 }

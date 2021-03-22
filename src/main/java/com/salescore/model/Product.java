@@ -20,4 +20,12 @@ public class Product extends ReactivePanacheMongoEntity {
         return this;
     }
 
+    public ProductDTO toDto(Product product) {
+        var dto = new ProductDTO();
+        dto.id = product.id != null ? product.id.toString() : null;
+        dto.name = product.name;
+        dto.price = product.price;
+        return dto;
+    }
+
 }

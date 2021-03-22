@@ -24,4 +24,12 @@ public class Seller extends ReactivePanacheMongoEntity {
         return this;
     }
 
+    public SellerDTO toDto(Seller seller) {
+        var dto = new SellerDTO();
+        dto.id = seller.id != null ? seller.id.toString() : null;
+        dto.name = seller.name;
+        dto.registrationNumber = seller.registrationNumber;
+        return dto;
+    }
+
 }

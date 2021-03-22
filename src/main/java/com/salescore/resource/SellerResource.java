@@ -6,6 +6,8 @@ import io.quarkus.mongodb.panache.reactive.ReactivePanacheMongoEntityBase;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import org.bson.types.ObjectId;
+import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.jboss.logging.Logger;
 
 import javax.inject.Inject;
@@ -15,6 +17,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import java.net.URI;
 
+@Tag(name = "Seller Resource")
 @Path("/api/v1/sellers")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
@@ -23,6 +26,7 @@ public class SellerResource {
     @Inject
     Logger log;
 
+    @Operation(summary = "Find seller by id")
     @GET
     @Path("/{id}")
     public Uni<SellerDTO> findById(@PathParam("id") String id) {
@@ -32,6 +36,7 @@ public class SellerResource {
                 .map(s -> convertEntityToDto((Seller) s));
     }
 
+    @Operation(summary = "List all sellers")
     @GET
     public Multi<SellerDTO> listAll() {
         return Seller.streamAll()
@@ -41,6 +46,7 @@ public class SellerResource {
 
     // TODO: filter
 
+    @Operation(summary = "Save new seller")
     @POST
     public Uni<Response> create(SellerDTO dto) {
         var seller = convertDtoToEntity(dto);
@@ -52,6 +58,7 @@ public class SellerResource {
                 .map(ResponseBuilder::build);
     }
 
+    @Operation(summary = "Update seller by id")
     @PUT
     @Path("/{id}")
     public Uni<SellerDTO> update(SellerDTO dto, @PathParam("id") String id) {
@@ -63,6 +70,7 @@ public class SellerResource {
                 .map(this::convertEntityToDto);
     }
 
+    @Operation(summary = "Delete seller by id")
     @DELETE
     @Path("/{id}")
     public Uni<Response> delete(@PathParam("id") String id) {
@@ -75,11 +83,7 @@ public class SellerResource {
     }
 
     private SellerDTO convertEntityToDto(Seller seller) {
-        var dto = new SellerDTO();
-        dto.id = seller.id != null ? seller.id.toString() : null;
-        dto.name = seller.name;
-        dto.registrationNumber = seller.registrationNumber;
-        return dto;
+        return seller.toDto(seller);
     }
 
     private Seller convertDtoToEntity(SellerDTO dto) {

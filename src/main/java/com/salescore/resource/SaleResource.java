@@ -9,6 +9,8 @@ import io.quarkus.mongodb.panache.reactive.ReactivePanacheMongoEntityBase;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import org.bson.types.ObjectId;
+import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.jboss.logging.Logger;
 
 import javax.inject.Inject;
@@ -19,6 +21,7 @@ import java.math.BigDecimal;
 import java.net.URI;
 import java.util.Objects;
 
+@Tag(name = "Sales Resource")
 @Path("/api/v1/sales")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
@@ -27,6 +30,7 @@ public class SaleResource {
     @Inject
     Logger log;
 
+    @Operation(summary = "Find sale by id")
     @GET
     @Path("/{id}")
     public Uni<SaleResponseDTO> findById(@PathParam("id") String id) {
@@ -36,6 +40,7 @@ public class SaleResource {
                 .map(s -> convertEntityToDto((Sale) s));
     }
 
+    @Operation(summary = "List all products")
     @GET
     public Multi<SaleResponseDTO> listAll() {
         return Sale.streamAll()
@@ -45,6 +50,7 @@ public class SaleResource {
 
     // TODO: filter
 
+    @Operation(summary = "Save new sale")
     @POST
     public Uni<Response> create(SaleCreationDTO dto) {
         var sale = convertDtoToEntity(dto);
@@ -76,6 +82,7 @@ public class SaleResource {
                 .map(Response.ResponseBuilder::build);
     }
 
+    @Operation(summary = "Update sale by id")
     @PUT
     @Path("/{id}")
     public Uni<SaleResponseDTO> update(SaleCreationDTO dto, @PathParam("id") String id) {
@@ -87,6 +94,7 @@ public class SaleResource {
                 .map(this::convertEntityToDto);
     }
 
+    @Operation(summary = "Delete sale by id")
     @DELETE
     @Path("/{id}")
     public Uni<Response> delete(@PathParam("id") String id) {
@@ -99,12 +107,7 @@ public class SaleResource {
     }
 
     private SaleResponseDTO convertEntityToDto(Sale sale) {
-        var dto = new SaleResponseDTO();
-        dto.id = sale.id != null ? sale.id.toString() : null;
-        dto.seller = sale.seller;
-        dto.amount = sale.amount;
-        dto.products = sale.products;
-        return dto;
+        return sale.toDto(sale);
     }
 
     private Sale convertDtoToEntity(SaleCreationDTO dto) {

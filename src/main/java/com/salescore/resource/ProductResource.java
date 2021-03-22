@@ -6,6 +6,8 @@ import io.quarkus.mongodb.panache.reactive.ReactivePanacheMongoEntityBase;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import org.bson.types.ObjectId;
+import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.jboss.logging.Logger;
 
 import javax.inject.Inject;
@@ -15,6 +17,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import java.net.URI;
 
+@Tag(name = "Product Resource")
 @Path("/api/v1/products")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
@@ -23,6 +26,7 @@ public class ProductResource {
     @Inject
     Logger log;
 
+    @Operation(summary = "Find product by id")
     @GET
     @Path("/{id}")
     public Uni<ProductDTO> findById(@PathParam("id") String id) {
@@ -32,15 +36,17 @@ public class ProductResource {
                 .map(s -> convertEntityToDto((Product) s));
     }
 
+    @Operation(summary = "List all products")
     @GET
     public Multi<ProductDTO> listAll() {
         return Product.streamAll()
                 .onSubscribe().invoke(() -> log.trace("Listing all products"))
-                .onItem().transform(entity -> convertEntityToDto((Product) entity));
+                .map(entity -> convertEntityToDto((Product) entity));
     }
 
     // TODO: filter
 
+    @Operation(summary = "Save new product")
     @POST
     public Uni<Response> create(ProductDTO dto) {
         var product = convertDtoToEntity(dto);
@@ -52,6 +58,7 @@ public class ProductResource {
                 .map(ResponseBuilder::build);
     }
 
+    @Operation(summary = "Update product by id")
     @PUT
     @Path("/{id}")
     public Uni<ProductDTO> update(ProductDTO dto, @PathParam("id") String id) {
@@ -63,6 +70,7 @@ public class ProductResource {
                 .map(this::convertEntityToDto);
     }
 
+    @Operation(summary = "Delete product by id")
     @DELETE
     @Path("/{id}")
     public Uni<Response> delete(@PathParam("id") String id) {
@@ -75,11 +83,7 @@ public class ProductResource {
     }
 
     private ProductDTO convertEntityToDto(Product product) {
-        var dto = new ProductDTO();
-        dto.id = product.id != null ? product.id.toString() : null;
-        dto.name = product.name;
-        dto.price = product.price;
-        return dto;
+        return product.toDto(product);
     }
 
     private Product convertDtoToEntity(ProductDTO dto) {
