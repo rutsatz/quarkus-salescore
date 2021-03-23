@@ -11,6 +11,7 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.jboss.logging.Logger;
 
 import javax.inject.Inject;
+import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -48,7 +49,7 @@ public class ProductResource {
 
     @Operation(summary = "Save new product")
     @POST
-    public Uni<Response> create(ProductDTO dto) {
+    public Uni<Response> create(@Valid ProductDTO dto) {
         var product = convertDtoToEntity(dto);
         return product.persist()
                 .onSubscribe().invoke(() -> log.debugf("Saving new product %s", dto))
@@ -61,7 +62,7 @@ public class ProductResource {
     @Operation(summary = "Update product by id")
     @PUT
     @Path("/{id}")
-    public Uni<ProductDTO> update(ProductDTO dto, @PathParam("id") String id) {
+    public Uni<ProductDTO> update(@Valid ProductDTO dto, @PathParam("id") String id) {
         return Product.findById(new ObjectId(id))
                 .onSubscribe().invoke(() -> log.debugf("Updating product %s", dto))
                 .onItem().ifNull().failWith(NotFoundException::new)
