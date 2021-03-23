@@ -1,7 +1,8 @@
-package com.salescore.exception;
+package com.salescore.infrastructure.service.exception.handler;
+
+import com.salescore.infrastructure.service.exception.Error;
 
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 import java.util.List;

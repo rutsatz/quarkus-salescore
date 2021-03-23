@@ -1,6 +1,6 @@
-package com.salescore.model;
+package com.salescore.domain.model;
 
-import com.salescore.dto.ProductDTO;
+import com.salescore.infrastructure.api.rest.dto.ProductDTO;
 import io.quarkus.mongodb.panache.reactive.ReactivePanacheMongoEntity;
 
 import java.math.BigDecimal;

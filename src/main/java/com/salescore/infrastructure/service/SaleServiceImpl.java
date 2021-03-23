@@ -1,9 +1,10 @@
-package com.salescore.service;
+package com.salescore.infrastructure.service;
 
-import com.salescore.dto.SaleCreationDTO;
-import com.salescore.model.Product;
-import com.salescore.model.Sale;
-import com.salescore.model.Seller;
+import com.salescore.application.SaleService;
+import com.salescore.infrastructure.api.rest.dto.SaleCreationDTO;
+import com.salescore.domain.model.Product;
+import com.salescore.domain.model.Sale;
+import com.salescore.domain.model.Seller;
 import io.quarkus.mongodb.panache.reactive.ReactivePanacheMongoEntityBase;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
@@ -19,22 +20,25 @@ import java.util.List;
 import java.util.Objects;
 
 @ApplicationScoped
-public class SaleService {
+public class SaleServiceImpl implements SaleService {
 
     @Inject
     Logger log;
 
+    @Override
     public Uni<Sale> findById(String id) {
         return Sale.<Sale>findById(new ObjectId(id))
                 .onSubscribe().invoke(() -> log.tracef("Searching for sale with id %s", id))
                 .onItem().ifNull().failWith(NotFoundException::new);
     }
 
+    @Override
     public Multi<Sale> listAll() {
         return Sale.<Sale>streamAll()
                 .onSubscribe().invoke(() -> log.trace("Listing all sales"));
     }
 
+    @Override
     public Uni<Sale> create(Sale sale) {
         var seller = Seller.<Seller>findById(sale.seller.id)
                 .onItem().ifNull().failWith(NotFoundException::new);
@@ -52,6 +56,7 @@ public class SaleService {
     }
 
 
+    @Override
     public Uni<Sale> update(SaleCreationDTO dto, String id) {
         return Sale.findById(new ObjectId(id))
                 .onSubscribe().invoke(() -> log.debugf("Updating sale %s", dto))
@@ -60,6 +65,7 @@ public class SaleService {
                 .onItem().call(sale -> sale.update());
     }
 
+    @Override
     public Uni<Void> delete(String id) {
         return Sale.findById(new ObjectId(id))
                 .onSubscribe().invoke(() -> log.debugf("Deleting sale %s", id))

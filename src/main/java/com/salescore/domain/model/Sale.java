@@ -1,7 +1,7 @@
-package com.salescore.model;
+package com.salescore.domain.model;
 
-import com.salescore.dto.SaleCreationDTO;
-import com.salescore.dto.SaleResponseDTO;
+import com.salescore.infrastructure.api.rest.dto.SaleCreationDTO;
+import com.salescore.infrastructure.api.rest.dto.SaleResponseDTO;
 import io.quarkus.mongodb.panache.reactive.ReactivePanacheMongoEntity;
 import org.bson.types.ObjectId;
 

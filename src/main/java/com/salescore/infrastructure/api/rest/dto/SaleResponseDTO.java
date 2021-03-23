@@ -1,7 +1,7 @@
-package com.salescore.dto;
+package com.salescore.infrastructure.api.rest.dto;
 
-import com.salescore.model.Product;
-import com.salescore.model.Seller;
+import com.salescore.domain.model.Product;
+import com.salescore.domain.model.Seller;
 
 import java.math.BigDecimal;
 import java.util.List;

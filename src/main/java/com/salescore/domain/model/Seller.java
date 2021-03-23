@@ -1,6 +1,6 @@
-package com.salescore.model;
+package com.salescore.domain.model;
 
-import com.salescore.dto.SellerDTO;
+import com.salescore.infrastructure.api.rest.dto.SellerDTO;
 import io.quarkus.mongodb.panache.reactive.ReactivePanacheMongoEntity;
 import io.smallrye.mutiny.Uni;
 

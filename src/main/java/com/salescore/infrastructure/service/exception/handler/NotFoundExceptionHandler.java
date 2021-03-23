@@ -1,4 +1,6 @@
-package com.salescore.exception;
+package com.salescore.infrastructure.service.exception.handler;
+
+import com.salescore.infrastructure.service.exception.Error;
 
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Response;

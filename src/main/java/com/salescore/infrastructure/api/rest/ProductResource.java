@@ -1,8 +1,8 @@
-package com.salescore.resource;
+package com.salescore.infrastructure.api.rest;
 
-import com.salescore.dto.ProductDTO;
-import com.salescore.model.Product;
-import com.salescore.service.ProductService;
+import com.salescore.infrastructure.api.rest.dto.ProductDTO;
+import com.salescore.domain.model.Product;
+import com.salescore.application.ProductService;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import org.eclipse.microprofile.openapi.annotations.Operation;

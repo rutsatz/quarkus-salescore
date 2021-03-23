@@ -1,4 +1,4 @@
-package com.salescore.exception;
+package com.salescore.infrastructure.service.exception;
 
 public class Error {
     public Error(String message) {

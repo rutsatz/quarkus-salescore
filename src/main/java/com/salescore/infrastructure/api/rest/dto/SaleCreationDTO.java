@@ -1,4 +1,4 @@
-package com.salescore.dto;
+package com.salescore.infrastructure.api.rest.dto;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;

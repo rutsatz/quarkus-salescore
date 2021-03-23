@@ -1,4 +1,4 @@
-package com.salescore.dto;
+package com.salescore.infrastructure.api.rest.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;

@@ -1,4 +1,6 @@
-package com.salescore.exception;
+package com.salescore.infrastructure.service.exception.handler;
+
+import com.salescore.infrastructure.service.exception.Error;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
