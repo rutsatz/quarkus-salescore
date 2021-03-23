@@ -44,4 +44,14 @@ public class Sale extends ReactivePanacheMongoEntity {
         dto.products = sale.products;
         return dto;
     }
+
+    @Override
+    public String toString() {
+        return "Sale{" +
+                "seller=" + seller +
+                ", products=" + products +
+                ", amount=" + amount +
+                ", id=" + id +
+                '}';
+    }
 }

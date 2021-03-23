@@ -2,10 +2,9 @@ package com.salescore.resource;
 
 import com.salescore.dto.SellerDTO;
 import com.salescore.model.Seller;
-import io.quarkus.mongodb.panache.reactive.ReactivePanacheMongoEntityBase;
+import com.salescore.service.SellerService;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
-import org.bson.types.ObjectId;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.jboss.logging.Logger;
@@ -27,22 +26,22 @@ public class SellerResource {
     @Inject
     Logger log;
 
+    @Inject
+    SellerService sellerService;
+
     @Operation(summary = "Find seller by id")
     @GET
     @Path("/{id}")
     public Uni<SellerDTO> findById(@PathParam("id") String id) {
-        return Seller.findById(new ObjectId(id))
-                .onSubscribe().invoke(() -> log.tracef("Searching for seller with id %s", id))
-                .onItem().ifNull().failWith(NotFoundException::new)
-                .map(s -> convertEntityToDto((Seller) s));
+        return sellerService.findById(id)
+                .map(this::convertEntityToDto);
     }
 
     @Operation(summary = "List all sellers")
     @GET
     public Multi<SellerDTO> listAll() {
-        return Seller.streamAll()
-                .onSubscribe().invoke(() -> log.trace("Listing all sellers"))
-                .onItem().transform(entity -> convertEntityToDto((Seller) entity));
+        return sellerService.listAll()
+                .map(this::convertEntityToDto);
     }
 
     // TODO: filter
@@ -51,10 +50,8 @@ public class SellerResource {
     @POST
     public Uni<Response> create(@Valid SellerDTO dto) {
         var seller = convertDtoToEntity(dto);
-        return seller.persist()
-                .onSubscribe().invoke(() -> log.debugf("Saving new seller %s", dto))
-                .flatMap(u -> Seller.findById(seller.id))
-                .map(s -> String.format("/api/v1/sellers/%s", ((Seller) s).id))
+        return sellerService.create(seller)
+                .map(s -> String.format("/api/v1/sellers/%s", s.id))
                 .map(id -> Response.created(URI.create(id)))
                 .map(ResponseBuilder::build);
     }
@@ -63,11 +60,7 @@ public class SellerResource {
     @PUT
     @Path("/{id}")
     public Uni<SellerDTO> update(@Valid SellerDTO dto, @PathParam("id") String id) {
-        return Seller.findById(new ObjectId(id))
-                .onSubscribe().invoke(() -> log.debugf("Updating seller %s", dto))
-                .onItem().ifNull().failWith(NotFoundException::new)
-                .map(entity -> ((Seller) entity).toEntity(dto))
-                .onItem().call(seller -> seller.update())
+        return sellerService.update(dto, id)
                 .map(this::convertEntityToDto);
     }
 
@@ -75,11 +68,7 @@ public class SellerResource {
     @DELETE
     @Path("/{id}")
     public Uni<Response> delete(@PathParam("id") String id) {
-        return Seller.findById(new ObjectId(id))
-                .onSubscribe().invoke(() -> log.debugf("Deleting seller %s", id))
-                .onItem().ifNull().failWith(NotFoundException::new)
-                .flatMap(ReactivePanacheMongoEntityBase::delete)
-                .onItem().invoke(() -> log.infof("Seller %s has been successfully deleted", id))
+        return sellerService.delete(id)
                 .map(u -> Response.noContent().build());
     }
 

@@ -28,4 +28,12 @@ public class Product extends ReactivePanacheMongoEntity {
         return dto;
     }
 
+    @Override
+    public String toString() {
+        return "Product{" +
+                "name='" + name + '\'' +
+                ", price=" + price +
+                ", id=" + id +
+                '}';
+    }
 }

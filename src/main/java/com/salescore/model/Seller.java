@@ -32,4 +32,12 @@ public class Seller extends ReactivePanacheMongoEntity {
         return dto;
     }
 
+    @Override
+    public String toString() {
+        return "Seller{" +
+                "name='" + name + '\'' +
+                ", registrationNumber=" + registrationNumber +
+                ", id=" + id +
+                '}';
+    }
 }
