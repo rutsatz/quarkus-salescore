@@ -40,10 +40,10 @@ public class SaleServiceImpl implements SaleService {
 
     @Override
     public Uni<Sale> create(Sale sale) {
-        var seller = Seller.<Seller>findById(sale.seller.id)
+        var seller = Seller.<Seller>findById(sale.getSeller().id)
                 .onItem().ifNull().failWith(NotFoundException::new);
 
-        var products = Multi.createFrom().items(sale.products.stream())
+        var products = Multi.createFrom().items(sale.getProducts().stream())
                 .flatMap(product -> Product.<Product>findById(product.id)
                         .onItem().ifNull().failWith(NotFoundException::new).toMulti())
                 .collect().asList();
@@ -75,13 +75,17 @@ public class SaleServiceImpl implements SaleService {
     }
 
     private Sale createSale(Sale sale, Tuple2<Seller, List<Product>> tuple) {
-        sale.seller = tuple.getItem1();
-        sale.products = tuple.getItem2();
-        sale.amount = sale.products.stream()
-                .map(product -> product.price)
+        sale.setSeller(tuple.getItem1());
+        sale.setProducts(tuple.getItem2());
+        sale.setAmount(sum(sale.getProducts()));
+        return sale;
+    }
+
+    private BigDecimal sum(List<Product> products) {
+        return products.stream()
+                .map(Product::getPrice)
                 .filter(Objects::nonNull)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
-        return sale;
     }
 
 }

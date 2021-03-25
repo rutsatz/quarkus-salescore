@@ -15,6 +15,30 @@ public class Sale extends ReactivePanacheMongoEntity {
     public List<Product> products;
     public BigDecimal amount;
 
+    public Seller getSeller() {
+        return seller;
+    }
+
+    public void setSeller(Seller seller) {
+        this.seller = seller;
+    }
+
+    public List<Product> getProducts() {
+        return products;
+    }
+
+    public void setProducts(List<Product> products) {
+        this.products = products;
+    }
+
+    public BigDecimal getAmount() {
+        return amount;
+    }
+
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
+    }
+
     /**
      * TODO: Bug relaciado ao gradle. Fix previsto para a próxima release (1.13.x)
      * https://github.com/quarkusio/quarkus/issues/15104

@@ -10,6 +10,10 @@ public class Product extends ReactivePanacheMongoEntity {
     public String name;
     public BigDecimal price;
 
+    public BigDecimal getPrice() {
+        return price;
+    }
+
     /**
      * TODO: Bug relaciado ao gradle. Fix previsto para a próxima release (1.13.x)
      * https://github.com/quarkusio/quarkus/issues/15104
