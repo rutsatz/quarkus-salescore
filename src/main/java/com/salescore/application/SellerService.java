@@ -8,6 +8,8 @@ import io.smallrye.mutiny.Uni;
 public interface SellerService {
     Uni<Seller> findById(String id);
 
+    Uni<Seller> findByRegistrationNumber(Long registrationNumber);
+
     Multi<Seller> listAll();
 
     Uni<Seller> create(Seller seller);

@@ -1,6 +1,5 @@
-package com.salescore.resource;
+package com.salescore.infrastructure.api.rest;
 
-import com.salescore.resource.SellerResourceTest;
 import io.quarkus.test.junit.NativeImageTest;
 
 @NativeImageTest

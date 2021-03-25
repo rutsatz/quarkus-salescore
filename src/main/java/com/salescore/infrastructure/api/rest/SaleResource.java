@@ -44,8 +44,6 @@ public class SaleResource {
                 .onItem().transform(this::convertEntityToDto);
     }
 
-    // TODO: filter
-
     @Operation(summary = "Save new sale")
     @POST
     public Uni<Response> create(@Valid SaleCreationDTO dto) {

@@ -44,8 +44,6 @@ public class ProductResource {
                 .map(this::convertEntityToDto);
     }
 
-    // TODO: filter
-
     @Operation(summary = "Save new product")
     @POST
     public Uni<Response> create(@Valid ProductDTO dto) {

@@ -18,6 +18,7 @@ dependencies {
     testImplementation 'io.quarkus:quarkus-panache-mock'
     testImplementation 'io.quarkus:quarkus-junit5'
     testImplementation 'io.rest-assured:rest-assured'
+    testImplementation 'org.testcontainers:mongodb:1.15.2'
 }
 
 group 'com.salescore'

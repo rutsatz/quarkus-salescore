@@ -27,6 +27,13 @@ public class SellerServiceImpl implements SellerService {
     }
 
     @Override
+    public Uni<Seller> findByRegistrationNumber(Long registrationNumber) {
+        return Seller.findByRegistrationNumber(registrationNumber)
+                .onSubscribe().invoke(() -> log.tracef("Searching for seller with registrationNumber %d", registrationNumber))
+                .onItem().ifNull().failWith(NotFoundException::new);
+    }
+
+    @Override
     public Multi<Seller> listAll() {
         return Seller.<Seller>streamAll()
                 .onSubscribe().invoke(() -> log.trace("Listing all sellers"));

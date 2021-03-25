@@ -1,8 +1,8 @@
 package com.salescore.infrastructure.api.rest;
 
-import com.salescore.infrastructure.api.rest.dto.SellerDTO;
-import com.salescore.domain.model.Seller;
 import com.salescore.application.SellerService;
+import com.salescore.domain.model.Seller;
+import com.salescore.infrastructure.api.rest.dto.SellerDTO;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import org.eclipse.microprofile.openapi.annotations.Operation;
@@ -37,14 +37,23 @@ public class SellerResource {
                 .map(this::convertEntityToDto);
     }
 
+    /**
+     * TODO: The /all was used because it was not working in conjunction with the filter by registration number
+     */
     @Operation(summary = "List all sellers")
     @GET
+    @Path("/all")
     public Multi<SellerDTO> listAll() {
         return sellerService.listAll()
                 .map(this::convertEntityToDto);
     }
 
-    // TODO: filter
+    @Operation(summary = "Find seller by registration number")
+    @GET
+    public Uni<SellerDTO> findByRegistrationNumber(@QueryParam("registrationNumber") Long registrationNumber) {
+        return sellerService.findByRegistrationNumber(registrationNumber)
+                .map(this::convertEntityToDto);
+    }
 
     @Operation(summary = "Save new seller")
     @POST

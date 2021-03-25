@@ -10,8 +10,23 @@ public class Seller extends ReactivePanacheMongoEntity {
     public Long registrationNumber;
 
     public static Uni<Seller> findByRegistrationNumber(Long registrationNumber) {
-        return find("registrationNumber", registrationNumber)
-                .firstResult();
+        return find("registrationNumber", registrationNumber).firstResult();
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Long getRegistrationNumber() {
+        return registrationNumber;
+    }
+
+    public void setRegistrationNumber(Long registrationNumber) {
+        this.registrationNumber = registrationNumber;
     }
 
     /**
