@@ -1,60 +1,79 @@
 # salescore project
 
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
+## Testing Online
+You can use the link below to test the application:
 
-If you want to learn more about Quarkus, please visit its website: https://quarkus.io/ .
+[https://salescore.herokuapp.com/swagger/](https://salescore.herokuapp.com/swagger/)
 
-## Running the application in dev mode
+## Testing locally
 
-You can run your application in dev mode that enables live coding using:
+See the steps below to run the application on your local machine.
+
+### Requirements
+
+You will need to have the tools below installed locally:
+
+- Java 11
+- Docker
+
+### Downloading the project source code
+
+Clone the Git repository below:
+
+[https://github.com/rutsatz/quarkus-salescore](https://github.com/rutsatz/quarkus-salescore)
+
+
+### Running the project locally
+
+Inside the project folder, execute the code below:
+
 ```shell script
 ./gradlew quarkusDev
 ```
 
-> **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at http://localhost:8080/q/dev/.
+### Accessing the API locally
 
-## Packaging and running the application
+With the project running, you can test the API by accessing the following address:
 
-The application can be packaged using:
+[http://localhost:8080/swagger/](http://localhost:8080/swagger/)
+
+
+> **_NOTE:_** If you prefer to use Postman, you can use the collection below that comes with the examples ready to run locally. [Download Collection](https://www.getpostman.com/collections/b1cf4487283530534d76)
+
+
+### Compiling the project
+
+Use the following command to package the project:
+
 ```shell script
 ./gradlew build
 ```
-It produces the `quarkus-run.jar` file in the `build/quarkus-app/` directory.
-Be aware that it’s not an _über-jar_ as the dependencies are copied into the `build/quarkus-app/lib/` directory.
 
-If you want to build an _über-jar_, execute the following command:
+
+### Creating a container
+
 ```shell script
-./gradlew build -Dquarkus.package.type=uber-jar
+docker build -f src/main/docker/Dockerfile.jvm -t quarkus/salescore-jvm .
 ```
 
-The application is now runnable using `java -jar build/quarkus-app/quarkus-run.jar`.
+### Running the container
 
-## Creating a native executable
-
-You can create a native executable using: 
 ```shell script
-./gradlew build -Dquarkus.package.type=native
+docker run -i --rm -p 8080:8080 quarkus/salescore-jvm
 ```
 
-Or, if you don't have GraalVM installed, you can run the native executable build in a container using: 
-```shell script
-./gradlew build -Dquarkus.package.type=native -Dquarkus.native.container-build=true
-```
+## About the project
 
-You can then execute your native executable with: `./build/salescore-1.0.0-SNAPSHOT-runner`
+This project was developed using Java with the Quarkus framework and MongoDB for database.
 
-If you want to learn more about building native executables, please consult https://quarkus.io/guides/gradle-tooling.
+## Supporting a very high access load
 
-## Related guides
+Considering that the statistics endpoints will be accessed a lot, we could change the current
+architecture of the project to something as shown in the diagram below:
 
-- MongoDB client ([guide](https://quarkus.io/guides/mongodb)): Connect to MongoDB in either imperative or reactive style
-- RESTEasy Mutiny ([guide](https://quarkus.io/guides/getting-started-reactive#mutiny)): Mutiny support for RESTEasy server
+![salescore_diagram](https://user-images.githubusercontent.com/14064725/112550842-c1c20800-8d9e-11eb-9e6c-eb4971785583.png)
 
-## Provided examples
 
-### RESTEasy Reactive example
-
-Rest is easy peasy & reactive with this Hello World RESTEasy Reactive resource.
-
-[Related guide section...](https://quarkus.io/guides/getting-started-reactive#reactive-jax-rs-resources)
-# quarkus-salescore
+In this diagram, we separate the statistics service into a separate service. It receives events about
+sales made and updates its own database. In this way, we are able to isolate the high access load in a
+way that does not affect the operation of the other services and we can have an updated report in real time.
